@@ -1,0 +1,12 @@
+{
+  "name": "myfe",
+  "version": "0.0.0",
+  "description": "a fis quick get started demo for pure",
+  "keywords": [
+    "fis",
+    "demo",
+    "pure"
+  ],
+  "repository": "",
+  "license": "BSD"
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script type="text/javascript" src="../../lib/mod.js"></script>
+    <style type="text/css">
+    .box {
+        height: 500px;
+        width: 200px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+    <script type="text/javascript">
+    var draw = require('draw');
+    // draw.line({
+    //     selector: '.box',
+    //     startx: 50,
+    //     starty: 20,
+    //     endx: 50,
+    //     endy: 90,
+    //     strokeColor: 'blue',
+    // });
+    draw.triangle({
+    	xa:20,
+    	ya:50,
+    	xb:20,
+    	yb:80,
+    	xc:50,
+    	yc:30,
+    	selector:'.box',
+    	fillColor:'red',
+    	strokeColor:'blue'
+    });
+    </script>
+</body>
+
+</html>

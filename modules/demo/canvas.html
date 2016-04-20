@@ -7,8 +7,8 @@
     <script type="text/javascript" src="../../lib/mod.js"></script>
     <style type="text/css">
     .box {
-        height: 500px;
-        width: 200px;
+        height: 100px;
+        width: 100px;
     }
     </style>
 </head>
@@ -19,25 +19,19 @@
     var draw = require('draw');
     draw.lines({
         selector: '.box',
-        vertices:[[20,50],[20,80],[50,30]],
-        strokeStyle:{
+        vertices: [
+            [20, 50],
+            [20, 80],
+            [50, 30],
+        ],
+        strokeStyle: {
             color: 'blue',
-            lineWidth:5
+            lineWidth: 5
         },
-        isFill:true,
-        isClose:true
+        isFill: true,
+        isClose: true
     });
-    // draw.triangle({
-    // 	xa:20,
-    // 	ya:50,
-    // 	xb:20,
-    // 	yb:80,
-    // 	xc:50,
-    // 	yc:30,
-    // 	selector:'.box',
-    // 	fillColor:'red',
-    // 	strokeColor:'blue'
-    // });
+
     </script>
 </body>
 

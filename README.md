@@ -20,7 +20,7 @@ var draw = require('draw');
 - [ strokeColor ]   多边形的填充颜色，字符串类型，可以接受英文单词，如red，或者是16进制的颜色值，如#f00，#000fff
 - [ isFill ]    Boolean类型，多边形是否填充颜色，默认是false
 - [ isClose ]   Boolean类型，多边形是否描边，默认是false
-- [ stroke] json类型，多边形的描边样式
+- [ stroke ] json类型，多边形的描边样式
 
         属性  | 说明
         ---|---

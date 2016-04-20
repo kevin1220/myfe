@@ -40,18 +40,6 @@ exports.lines = function(options, _callback) {
         container.appendChild(canvas);
     }
 }
-exports.triangle = function(options) {
-    var options = options || {};
-    var xa = options.xa;
-    var ya = options.ya;
-    var xb = options.xb;
-    var yb = options.yb;
-    var xc = options.xc;
-    var yc = options.yc;
-    var ctx = ctx;
-    selector = options.selector;
-    var fillColor = options.fillColor;
-    var strokeColor = options.strokeColor;
-    ctx.beginPath();
+exports.rect = function(options) {
 
 }

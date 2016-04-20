@@ -17,25 +17,24 @@
     <div class="box"></div>
     <script type="text/javascript">
     var draw = require('draw');
-    // draw.line({
-    //     selector: '.box',
-    //     startx: 50,
-    //     starty: 20,
-    //     endx: 50,
-    //     endy: 90,
-    //     strokeColor: 'blue',
-    // });
-    draw.triangle({
-    	xa:20,
-    	ya:50,
-    	xb:20,
-    	yb:80,
-    	xc:50,
-    	yc:30,
-    	selector:'.box',
-    	fillColor:'red',
-    	strokeColor:'blue'
+    draw.lines({
+        selector: '.box',
+        vertices:[[20,50],[20,80],[50,30]],
+        strokeColor: 'blue',
+        isFill:true,
+        isClose:true
     });
+    // draw.triangle({
+    // 	xa:20,
+    // 	ya:50,
+    // 	xb:20,
+    // 	yb:80,
+    // 	xc:50,
+    // 	yc:30,
+    // 	selector:'.box',
+    // 	fillColor:'red',
+    // 	strokeColor:'blue'
+    // });
     </script>
 </body>
 

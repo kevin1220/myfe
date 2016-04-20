@@ -1,39 +1,44 @@
-exports.line = function(options, _callback) {
+exports.lines = function(options, _callback) {
     var utils = require('common/utils');
     var options = options || {};
-    this.selector = options.selector;
-    var startx = options.startx;
-    var starty = options.starty;
-    var endx = options.endx;
-    var endy = options.endy;
+    var selector = options.selector;
+    var vertices = options.vertices;
+    // console.log(vertices.length);
     var strokeColor = options.strokeColor;
-    if (!this.canvas) {
-        this.canvas = document.createElement('canvas');
-    }
-    if (!this.container) {
-        this.container = document.querySelector(this.selector);
-    }
-    this.canvas.width = this.container.clientWidth;
-    this.canvas.height = this.container.clientHeight;
-    this.ctx = this.canvas.getContext('2d');
-    if (this.ctx) {
-        this.ctx.beginPath();
-        this.ctx.moveTo(startx, starty);
-        this.ctx.lineTo(endx, endy);
-        this.ctx.strokeStyle = strokeColor;
-        this.ctx.stroke();
+    var isFill = options.isFill||false;
+    var isClose = options.isClose||false;
+    var fillColor = options.fillColor;
+    var canvas = document.createElement('canvas');
+    var container = document.querySelector(selector);
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+    ctx = canvas.getContext('2d');
+    if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(vertices[0][0], vertices[0][1]);
+        for (var i = 1; i < vertices.length; i++) {
+            ctx.lineTo(vertices[i][0], vertices[i][1]);
+        }
+        if (isClose) {
+            ctx.closePath();
+        }
+        if (isFill) {
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+        }
+        ctx.strokeStyle = strokeColor;
+        ctx.stroke();
         if (_callback) {
             utils.execCallBack(_callback);
         }
     } else {
         alert('the brower is not surpport canvas');
     }
-    if (!this.container.contains(this.canvas)) {
-        this.container.appendChild(this.canvas);
+    if (!container.contains(canvas)) {
+        container.appendChild(canvas);
     }
 }
 exports.triangle = function(options) {
-    var that = this;
     var options = options || {};
     var xa = options.xa;
     var ya = options.ya;
@@ -41,10 +46,10 @@ exports.triangle = function(options) {
     var yb = options.yb;
     var xc = options.xc;
     var yc = options.yc;
-    var ctx = that.ctx;
-    that.selector = options.selector;
+    var ctx = ctx;
+    selector = options.selector;
     var fillColor = options.fillColor;
     var strokeColor = options.strokeColor;
     ctx.beginPath();
-    t
+
 }

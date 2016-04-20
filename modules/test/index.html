@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>test</title>
-	<script type="text/javascript" src="../../lib/mod.js"></script>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script type="text/javascript" src="../../lib/mod.js"></script>
 </head>
+
 <body>
-	<script type="text/javascript">
-		var test = require('test');
-		test.test();
-	</script>
+    <div id="demo">
+        {{message}}
+        <input v-model="message">
+    </div>
+    <div id="demo2">
+        {{message2.name}}
+        <input v-model="message2.name">
+    </div>
+    <script type="text/javascript">
+    var Vue = require('vue');
+    var demo = new Vue({
+        el: '#demo',
+        data: {
+            message: 'Hello Vue.jss!'
+        }
+    });
+    var demo2 = new Vue({
+    	el:'#demo2',
+    	data:{
+    		message2:{
+    			name:'chong'
+    		}
+    	}
+    });
+    </script>
 </body>
+
 </html>

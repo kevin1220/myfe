@@ -41,5 +41,5 @@ exports.lines = function(options, _callback) {
     }
 }
 exports.rect = function(options) {
-
+    
 }

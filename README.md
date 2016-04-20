@@ -19,11 +19,11 @@ var draw = require('draw');
 - [ vertices ]  多边形的顶点坐标，数据类型是二位数组，如三角形的话，可以这样定义[[20,50],[20,80],[50,30]]
 - [ strokeColor ]   多边形的填充颜色，字符串类型，可以接受英文单词，如red，或者是16进制的颜色值，如#f00，#000fff
 - [ isFill ]    Boolean类型，多边形是否填充颜色，默认是false
-- [ isClose ]   Boolean类型，多边形是否描边，默认是false
-- [ stroke ] json类型，多边形的描边样式
+- [ isClose ]   Boolean类型，多边形是否封闭，默认是false
+- [ stroke] json类型，多边形的描边样式
 
-        属性  | 说明
-        ---|---
-        lineWidth | 描边的粗细
-        color | 描边的颜色
-
+                属性  | 说明
+                ---|---
+                lineWidth | 描边的粗细
+                color | 描边的颜色
+###### 支持回调函数，绘画完成之后调用

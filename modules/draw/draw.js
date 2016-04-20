@@ -4,9 +4,10 @@ exports.lines = function(options, _callback) {
     var selector = options.selector;
     var vertices = options.vertices;
     // console.log(vertices.length);
-    var strokeColor = options.strokeColor;
-    var isFill = options.isFill||false;
-    var isClose = options.isClose||false;
+    var strokeColor = options.strokeStyle.color;
+    var lineWidth = options.strokeStyle.lineWidth || 1;
+    var isFill = options.isFill || false;
+    var isClose = options.isClose || false;
     var fillColor = options.fillColor;
     var canvas = document.createElement('canvas');
     var container = document.querySelector(selector);
@@ -26,6 +27,7 @@ exports.lines = function(options, _callback) {
             ctx.fillStyle = fillColor;
             ctx.fill();
         }
+        ctx.lineWidth = lineWidth;
         ctx.strokeStyle = strokeColor;
         ctx.stroke();
         if (_callback) {

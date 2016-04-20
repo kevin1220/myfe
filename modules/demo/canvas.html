@@ -20,7 +20,10 @@
     draw.lines({
         selector: '.box',
         vertices:[[20,50],[20,80],[50,30]],
-        strokeColor: 'blue',
+        strokeStyle:{
+            color: 'blue',
+            lineWidth:5
+        },
         isFill:true,
         isClose:true
     });

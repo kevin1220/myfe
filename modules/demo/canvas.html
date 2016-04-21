@@ -17,6 +17,27 @@
     <div class="box"></div>
     <script type="text/javascript">
     var draw = require('draw').prop();
+
+    draw.context.beginPath();
+    draw.arc({
+        selector: '.box',
+        x: 50,
+        y: 50,
+        radius: 40,
+        startx: 90,
+        starty: 50,
+        strokeStyle: {
+            color: 'blue',
+            lineWidth: 1,
+        },
+        fillColor: 'red',
+        isFill: true,
+        isClose: true,
+        firstIMG: true,
+        newobj: true,
+        endAngle: Math.PI * 1.5,
+    });
+    draw.context.beginPath();
     draw.lines({
         selector: '.box',
         vertices: [
@@ -26,27 +47,15 @@
         ],
         strokeStyle: {
             color: 'blue',
-            lineWidth: 5
+            lineWidth: 2
         },
         fillColor: 'red',
         isFill: true,
         isClose: true,
-        firstIMG: true,
+        firstIMG: false,
+        newobj: false
     });
-
-    draw.arc({
-        selector: '.box',
-        x: 50,
-        y: 50,
-        radius: 40,
-        strokeStyle: {
-            color: 'blue',
-            lineWidth: 1,
-        },
-        fillColor: 'red',
-        isFill: true,
-        isClose: false,
-    });
+    
     </script>
 </body>
 

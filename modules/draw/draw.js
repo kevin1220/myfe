@@ -25,58 +25,92 @@ exports.prop = function(options) {
  */
 
 exports.lines = function(options, _callback) {
-    var utils = this.utils;
-    var options = options || {};
-    var selector = options.selector;
-    var vertices = options.vertices;
-    var strokeStyle = options.strokeStyle;
-    var strokeColor = strokeStyle.color;
-    var lineWidth = strokeStyle.lineWidth || 1;
-    var isFill = options.isFill;
-    var isClose = options.isClose;
-    var fillColor = options.fillColor;
-    var firstIMG = options.firstIMG || false;
-    var canvas = this.canvas;
-    var container = document.querySelector(selector);
-    if (firstIMG) {
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
+        var utils = this.utils;
+        var options = options || {};
+        var selector = options.selector;
+        var vertices = options.vertices;
+        var strokeStyle = options.strokeStyle;
+        var strokeColor = strokeStyle.color;
+        var lineWidth = strokeStyle.lineWidth || 1;
+        var isFill = options.isFill;
+        var isClose = options.isClose || false;
+        var fillColor = options.fillColor;
+        var firstIMG = options.firstIMG || false;
+        var newobj = options.newobj || false;
+        var canvas = this.canvas;
+        var container = document.querySelector(selector);
+        if (firstIMG) {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        var context = this.context;
+        if (context) {
+            if (!newobj) {
+                if (firstIMG) {
+                    canvas.width = container.clientWidth;
+                    canvas.height = container.clientHeight;
+                    context.moveTo(vertices[0][0], vertices[0][1]);
+
+                } else {
+                    context.lineTo(vertices[0][0], vertices[0][1]);
+
+                }
+            } else {
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+                context.moveTo(vertices[0][0], vertices[0][1]);
+
+            }
+
+            for (var i = 1; i < vertices.length; i++) {
+                context.lineTo(vertices[i][0], vertices[i][1]);
+            }
+
+
+            if (isFill) {
+                context.fillStyle = fillColor;
+                context.fill();
+            }
+            if (strokeStyle) {
+                context.lineWidth = lineWidth;
+                context.strokeStyle = strokeColor;
+                context.stroke();
+            }
+            if (isClose) {
+                console.log('close多边形');
+                context.closePath();
+            }
+
+            if (_callback) {
+
+                utils.execCallBack(_callback);
+            }
+        } else {
+            alert('the brower is not surpport canvas');
+        }
+        if (!container.contains(this.canvas)) {
+            container.appendChild(this.canvas);
+        }
+        return this;
     }
-    var context = this.context;
-    if (context) {
-        context.beginPath();
-        context.moveTo(vertices[0][0], vertices[0][1]);
-        for (var i = 1; i < vertices.length; i++) {
-            context.lineTo(vertices[i][0], vertices[i][1]);
-        }
-
-        if (isClose) {
-            context.closePath();
-        }
-
-        if (isFill) {
-            context.fillStyle = fillColor;
-            context.fill();
-        }
-        if (strokeStyle) {
-            context.lineWidth = lineWidth;
-            context.strokeStyle = strokeColor;
-            context.stroke();
-        }
-
-        if (_callback) {
-
-            utils.execCallBack(_callback);
-        }
-    } else {
-        alert('the brower is not surpport canvas');
-    }
-    if (!container.contains(this.canvas)) {
-        container.appendChild(this.canvas);
-    }
-    return this;
-}
-
+    /**
+     * 画圆
+     * @param  {selector} options 容器的选择器，可以接受CSS3的选择器
+     * @param  {x,y} options 分别是圆心的x,y坐标
+     * @param  {radius} options 半径
+     * @param  {startAngle} options 开始的弧度，默认0°
+     * @param  {endAngle} options 结束的弧度，默认Math.PI * 2，即360°
+     * @param  {anticlockwise} options 顺时针or逆时针画圆弧，默认是false，顺时针
+     * @param  {isFill} options 是否给圆弧填充颜色，默认不填充
+     * @param  {fillColor} options 填充的颜色
+     * @param  {strokeStyle} options 圆弧描边样式
+     * @param  {strokeStyle.color} options 圆弧描边颜色
+     * @param  {strokeStyle.lineWidth} options 圆弧描边的粗细
+     * @param  {startx，starty} options 画图起点的x,y坐标
+     * @param  {newobj} options 表示是否是一个新的draw对象，默认是false,此时，再判断firstIMG，进而判断起点是否和上一个图的终点连接
+     * @param  {firstIMG} options 是否是第一个图，默认是false，此时，起点和上一个图的终点连接，如果为true,起点不会和上一个图的终点连接
+     * @return {draw对象}           draw对象的引用
+     */
 exports.arc = function(options) {
     var options = options || {};
     var selector = options.selector;
@@ -87,19 +121,26 @@ exports.arc = function(options) {
     var endAngle = options.endAngle || Math.PI * 2;
     var anticlockwise = options.anticlockwise || false;
     var isFill = options.isFill || false;
-    var firstIMG = options.firstIMG || false;
+    var isClose = options.isClose || false;
     var strokeStyle = options.strokeStyle;
-    var fillColor = options.fillColor;
     var strokeColor = strokeStyle.color;
     var lineWidth = strokeStyle.lineWidth || 1;
+    var fillColor = options.fillColor;
+    var startx = options.startx;
+    var starty = options.starty;
+    var firstIMG = options.firstIMG || false;
+    var newobj = options.newobj || false;
     var context = this.context;
     var canvas = this.canvas;
     var container = document.querySelector(selector);
-    if (firstIMG) {
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-    }
     if (context) {
+        if (newobj) {
+            if (firstIMG) {
+                context.moveTo(startx, starty);
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+            }
+        }
         context.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         if (isFill) {
             context.fillStyle = fillColor;
@@ -109,6 +150,10 @@ exports.arc = function(options) {
             context.strokeStyle = strokeColor;
             context.lineWidth = lineWidth
             context.stroke();
+        }
+        if (isClose) {
+            console.log('close圆');
+            context.closePath();
         }
     } else {
         alert('the brower is not surpport canvas');

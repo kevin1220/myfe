@@ -18,7 +18,6 @@
     <script type="text/javascript">
     var draw = require('draw').prop();
 
-    draw.context.beginPath();
     draw.arc({
         selector: '.box',
         x: 50,
@@ -31,13 +30,12 @@
             lineWidth: 1,
         },
         fillColor: 'red',
-        isFill: true,
+        isFill: false,
         isClose: true,
-        firstIMG: true,
-        newobj: true,
         endAngle: Math.PI * 1.5,
+        newobj: true,
+        firstIMG: true
     });
-    draw.context.beginPath();
     draw.lines({
         selector: '.box',
         vertices: [
@@ -50,12 +48,11 @@
             lineWidth: 2
         },
         fillColor: 'red',
-        isFill: true,
+        isFill: false,
         isClose: true,
-        firstIMG: false,
-        newobj: false
+        newobj: false,
+        firstIMG: true,
     });
-    
     </script>
 </body>
 

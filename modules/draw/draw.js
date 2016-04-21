@@ -39,16 +39,11 @@ exports.lines = function(options, _callback) {
         var newobj = options.newobj || false;
         var canvas = this.canvas;
         var container = document.querySelector(selector);
-        if (firstIMG) {
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        }
         var context = this.context;
         if (context) {
             if (!newobj) {
                 if (firstIMG) {
-                    canvas.width = container.clientWidth;
-                    canvas.height = container.clientHeight;
+                    context.beginPath();
                     context.moveTo(vertices[0][0], vertices[0][1]);
 
                 } else {
@@ -58,12 +53,17 @@ exports.lines = function(options, _callback) {
             } else {
                 canvas.width = container.clientWidth;
                 canvas.height = container.clientHeight;
+                context.beginPath();
                 context.moveTo(vertices[0][0], vertices[0][1]);
 
             }
 
             for (var i = 1; i < vertices.length; i++) {
                 context.lineTo(vertices[i][0], vertices[i][1]);
+            }
+            if (isClose) {
+                console.log('close多边形');
+                context.closePath();
             }
 
 
@@ -76,10 +76,7 @@ exports.lines = function(options, _callback) {
                 context.strokeStyle = strokeColor;
                 context.stroke();
             }
-            if (isClose) {
-                console.log('close多边形');
-                context.closePath();
-            }
+
 
             if (_callback) {
 
@@ -136,12 +133,17 @@ exports.arc = function(options) {
     if (context) {
         if (newobj) {
             if (firstIMG) {
+                context.beginPath();
                 context.moveTo(startx, starty);
                 canvas.width = container.clientWidth;
                 canvas.height = container.clientHeight;
             }
         }
         context.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+        if (isClose) {
+            console.log('close圆');
+            context.closePath();
+        }
         if (isFill) {
             context.fillStyle = fillColor;
             context.fill();
@@ -151,10 +153,7 @@ exports.arc = function(options) {
             context.lineWidth = lineWidth
             context.stroke();
         }
-        if (isClose) {
-            console.log('close圆');
-            context.closePath();
-        }
+
     } else {
         alert('the brower is not surpport canvas');
     }

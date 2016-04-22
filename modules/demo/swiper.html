@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>modules</title>
+    <link rel="stylesheet" href="../swiper/swiper.css">
+    <script src="../../lib/mod.js" type="text/javascript"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style type="text/css">
+        .red{
+            background-color: red;
+        }
+        .green{
+            background-color: green;
+        }
+        .gray{
+            background-color: gray;
+        }
+        .swiper{
+            height: 300px;
+            width: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="swiper">
+        <div class="slider red"></div>
+        <div class="slider green"></div>
+        <div class="slider gray"></div>
+        <div class="slider red"></div>
+        <div class="slider green"></div>
+        <div class="slider gray"></div>
+        <div class="slider red"></div>
+        <div class="slider green"></div>
+        <div class="slider gray"></div>
+    </div>
+    <div class="info"></div>
+    <script type="text/javascript">
+    var mytouch = require("swiper");
+    mytouch.swipe({
+        selector: '.swiper',
+        direction:"vertical",
+    });
+    </script>
+</body>
+
+</html>

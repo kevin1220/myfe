@@ -37,10 +37,25 @@ exports.lines = function(options, _callback) {
         var fillColor = options.fillColor;
         var firstIMG = options.firstIMG || false;
         var newobj = options.newobj || false;
-        var canvas = this.canvas;
         var container = document.querySelector(selector);
+        var canvas = this.canvas;
         var context = this.context;
         if (context) {
+            draw();
+
+
+            if (_callback) {
+
+                utils.execCallBack(_callback);
+            }
+        } else {
+            alert('the brower is not surpport canvas');
+        }
+        if (!container.contains(this.canvas)) {
+            container.appendChild(this.canvas);
+        }
+
+        function draw() {
             if (!newobj) {
                 if (firstIMG) {
                     context.beginPath();
@@ -76,17 +91,6 @@ exports.lines = function(options, _callback) {
                 context.strokeStyle = strokeColor;
                 context.stroke();
             }
-
-
-            if (_callback) {
-
-                utils.execCallBack(_callback);
-            }
-        } else {
-            alert('the brower is not surpport canvas');
-        }
-        if (!container.contains(this.canvas)) {
-            container.appendChild(this.canvas);
         }
         return this;
     }
@@ -162,4 +166,36 @@ exports.arc = function(options) {
         container.appendChild(canvas);
     }
     return this;
+};
+exports.bezier = function() {
+    var container = document.querySelector('.box');
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+
+    function draw() {
+        setTimeout(function() {
+            var cp1x = Math.random() * 50;
+            var cp1y = Math.random() * 50;
+            var x = Math.random() * 50;
+            var y = Math.random() * 50;
+            if (ctx) {
+                ctx.clearRect(0, 0, 500, 500);
+                ctx.beginPath();
+                ctx.moveTo(50, 10);
+                ctx.quadraticCurveTo(cp1x, cp1y, x, y);
+            }
+            ctx.stroke();
+            requestAnimationFrame(draw);
+        }, 500)
+    }
+    requestAnimationFrame(draw);
+    container.appendChild(canvas);
+
+};
+exports.ani = function(){
+    function change(draw){
+
+        requestAnimationFrame(change);
+    }
+    var ani = requestAnimationFrame(change);
 }

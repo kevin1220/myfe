@@ -17,7 +17,7 @@
         .gray{
             background-color: gray;
         }
-        .swiper{
+        .swiper-container{
             height: 300px;
             width: 600px;
         }
@@ -25,7 +25,8 @@
 </head>
 
 <body>
-    <div class="swiper">
+    <div class="swiper-container">
+        <div class="swiper">
         <div class="slider red"></div>
         <div class="slider green"></div>
         <div class="slider gray"></div>
@@ -36,12 +37,17 @@
         <div class="slider green"></div>
         <div class="slider gray"></div>
     </div>
+    </div>
+    
     <div class="info"></div>
     <script type="text/javascript">
     var mytouch = require("swiper");
     mytouch.swipe({
-        selector: '.swiper',
-        direction:"vertical",
+        selector: '.swiper-container',
+        direction:"horizontal",
+        flowmouse:false,
+        loop:false,
+        autoPlay:3000
     });
     </script>
 </body>

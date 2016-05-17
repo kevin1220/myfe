@@ -14,16 +14,16 @@ var Swiper = function() {
     var options = {};
     var browser = require('common/browser');
     var utils = require('common/utils');
+    var activeIndex = 0;
 
     var moveHandle_PC = function(e) {
         currentPoint.x = e.pageX;
         currentPoint.y = e.pageY;
         document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
-        if (m.direction == "horizontal") {
-            m.currentNode.style.marginLeft = currentPoint.x - startPoint.x + "px";
-        } else if (m.direction == "vertical") {
-            console.log(currentPoint.y - startPoint.y)
-            m.currentNode.style.marginTop = currentPoint.y - startPoint.y + "px";
+        if (m.direction == "horizontal" && m.flowmouse) {
+            m.swiper.style.Left = currentPoint.x - startPoint.x + "px";
+        } else if (m.direction == "vertical" && m.flowmouse) {
+            m.swiper.style.Top = currentPoint.y - startPoint.y + "px";
         } else {
             return;
         }
@@ -32,10 +32,9 @@ var Swiper = function() {
         currentPoint.x = e.changedTouches[0].pageX;
         currentPoint.y = e.changedTouches[0].pageY;
         if (m.direction == "horizontal") {
-            m.currentNode.style.marginLeft = currentPoint.x - startPoint.x + "px";
+            m.swiper.style.Left = currentPoint.x - startPoint.x + "px";
         } else if (m.direction == "vertical") {
-            console.log(currentPoint.y - startPoint.y)
-            m.currentNode.style.marginTop = currentPoint.y - startPoint.y + "px";
+            m.swiper.style.Top = currentPoint.y - startPoint.y + "px";
         } else {
             return;
         }
@@ -53,29 +52,26 @@ var Swiper = function() {
     m.config = function(_callback) {
         var selector = m.selector;
         // 设置默认激活的slider
-        var sliders = document.querySelectorAll(selector + " .slider");
+        m.container = document.querySelector(selector);
+        m.width = m.container.clientWidth;
+        m.height = m.container.clientHeight;
+        m.swiper = document.querySelector(selector + " .swiper");
 
-        if (sliders.length > 0) {
-            sliders[0].className = sliders[0].getAttribute("class") + " active";
-            m.currentNode = document.querySelector('.active');
-            if (m.currentNode.previousElementSibling) {
-                m.prevNode = m.currentNode.previousElementSibling;
-                m.prevNode.className = m.prevNode.getAttribute("class") + " prev";
-            } else {
-                m.prevNode = sliders[sliders.length - 1];
-                m.prevNode.className = m.prevNode.getAttribute("class") + " prev";
-            }
-            if (m.currentNode.nextElementSibling) {
-                m.nextNode = m.currentNode.nextElementSibling;
-                m.nextNode.className = m.nextNode.getAttribute("class") + " next";
-            } else {
-                m.nextNode = sliders[0];
-                m.nextNode.className = m.nextNode.getAttribute("class") + " next";
-            }
+        m.sliders = document.querySelectorAll(selector + " .slider");
+        m.length = m.sliders.length;
+        [].slice.call(m.sliders).map(function(slider) {
+            slider.style.height = m.height + 'px';
+            slider.style.width = m.width + 'px';
+        });
+
+        if (m.direction == "horizontal") {
+            m.swiper.style.width = m.width * (m.length + 1) + 'px';
+        } else if (m.direction == "vertical") {
+            m.swiper.style.height = m.height * (m.length + 1) + 'px';
         }
-        var ele = document.querySelector(selector + " .active");
         //开始滑动
-        ele.addEventListener(events.start, function(e) {
+        var swiper = m.swiper;
+        swiper.addEventListener(events.start, function(e) {
             e.preventDefault();
             if (browser.isMobile()) {
                 startPoint.x = e.changedTouches[0].pageX;
@@ -85,39 +81,44 @@ var Swiper = function() {
                 startPoint.x = e.pageX;
                 startPoint.y = e.pageY;
 
-                ele.addEventListener(events.move, moveHandle_PC, false);
+                swiper.addEventListener(events.move, moveHandle_PC, false);
             }
             document.querySelector('.info').innerHTML = "start-->(" + startPoint.x + "," + startPoint.y + ")";
         }, false);
         //移动滑动
         if (browser.isMobile()) {
-            ele.addEventListener(events.move, moveHandle_MOBILE, false);
+            swiper.addEventListener(events.move, moveHandle_MOBILE, false);
         }
         //滑动结束
-        ele.addEventListener(events.end, function(e) {
+        swiper.addEventListener(events.end, function(e) {
             if (browser.isMobile()) {
                 endPoint.x = e.changedTouches[0].pageX;
                 endPoint.y = e.changedTouches[0].pageY;
             } else {
                 endPoint.x = e.pageX;
                 endPoint.y = e.pageY;
-                ele.removeEventListener(events.move, moveHandle_PC, false);
+                swiper.removeEventListener(events.move, moveHandle_PC, false);
             }
             document.querySelector('.info').innerHTML = "end-->(" + endPoint.x + "," + endPoint.y + ")";
             utils.execCallBack(_callback);
         }, false);
-
-
     };
     m.swipe = function(options) {
         m.selector = options.selector;
         m.direction = options.direction;
+        m.flowmouse = options.flowmouse;
+        m.loop = options.loop;
+        m.autoPlay = options.autoPlay;
+        if(m.autoPlay){
+            setInterval(function(){
+                m.next();
+            }, m.autoPlay)
+        }
         var threshold = options.threshold || 50;
         var handle = options.handle || function() {};
         m.config(function() {
             var x = endPoint.x - startPoint.x;
             var y = endPoint.y - startPoint.y;
-            console.log(x + "---" + y);
             if (x >= threshold && m.direction === "horizontal") {
                 //swipeRight
                 m.prev();
@@ -134,28 +135,40 @@ var Swiper = function() {
         });
     };
     m.next = function() {
-        if (m.direction == "horizontal") {
-            console.log('swipeleft')
-        } else if (m.direction == "vertical") {
-            console.log('swipeup');
-            m.currentNode = document.querySelector('.active');
-            m.prevNode = document.querySelector('.prev');
-            m.nextNode = document.querySelector('.next');
-            m.nextNode.className = m.nextNode.getAttribute('class').slice(0, -5) + ' active';
-            m.nextNode.nextElementSibling.className = m.nextNode.nextElementSibling.getAttribute('class') + ' next';
-            m.currentNode.style.marginTop = "-100%";
-            m.currentNode.className = m.currentNode.getAttribute('class').slice(0, -7) + ' prev';
-            m.prevNode.className = m.currentNode.getAttribute('class').slice(0, -5);
+        activeIndex += 1;
+        if (activeIndex >= m.length) {
+
+            if (!m.loop) {
+                activeIndex -= 1;
+            } else {
+                activeIndex = 0;
+            }
         }
+
+        m.goTo(activeIndex);
     }
     m.prev = function() {
+        activeIndex -= 1;
+        if (activeIndex < 0) {
+            if (!m.loop) {
+                activeIndex += 1;
+            } else {
+                activeIndex = m.length - 1;
+            }
+
+        }
+        m.goTo(activeIndex);
+    }
+    m.goTo = function(index) {
         if (m.direction == "horizontal") {
-            console.log('swiperight')
+            m.swiper.style.left = index * -1 * m.width + 'px';
+
         } else if (m.direction == "vertical") {
-            console.log('swipedown');
+            m.swiper.style.top = index * -1 * m.height + 'px';
+        } else {
+            return;
         }
     }
-
 }
 
 module.exports = new Swiper();

@@ -14,16 +14,16 @@ var Swiper = function() {
     var options = {};
     var browser = require('common/browser');
     var utils = require('common/utils');
-    var activeIndex = 0;
-
+    m.activeIndex = 0;
+    m.startPosition = {};
     var moveHandle_PC = function(e) {
         currentPoint.x = e.pageX;
         currentPoint.y = e.pageY;
-        document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
+        // document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
         if (m.direction == "horizontal" && m.flowmouse) {
-            m.swiper.style.Left = currentPoint.x - startPoint.x + "px";
+            m.swiper.style.left = (m.startPosition.left.slice(0, -2) * 1 + currentPoint.x - startPoint.x) + "px";
         } else if (m.direction == "vertical" && m.flowmouse) {
-            m.swiper.style.Top = currentPoint.y - startPoint.y + "px";
+            m.swiper.style.top = (m.startPosition.top.slice(0, -2) * 1 + currentPoint.y - startPoint.y) + "px";
         } else {
             return;
         }
@@ -31,14 +31,14 @@ var Swiper = function() {
     var moveHandle_MOBILE = function(e) {
         currentPoint.x = e.changedTouches[0].pageX;
         currentPoint.y = e.changedTouches[0].pageY;
-        if (m.direction == "horizontal") {
-            m.swiper.style.Left = currentPoint.x - startPoint.x + "px";
-        } else if (m.direction == "vertical") {
-            m.swiper.style.Top = currentPoint.y - startPoint.y + "px";
+        if (m.direction == "horizontal" && m.flowmouse) {
+            m.swiper.style.left = (m.startPosition.left.slice(0, -2) * 1 + currentPoint.x - startPoint.x) + "px";
+        } else if (m.direction == "vertical" && m.flowmouse) {
+            m.swiper.style.top = (m.startPosition.top.slice(0, -2) * 1 + currentPoint.y - startPoint.y) + "px";
         } else {
             return;
         }
-        document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
+        // document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
     }
     if (browser.isMobile()) {
         events.start = "touchstart";
@@ -69,10 +69,16 @@ var Swiper = function() {
         } else if (m.direction == "vertical") {
             m.swiper.style.height = m.height * (m.length + 1) + 'px';
         }
+        if (m.navigation) {
+            m.createNav();
+        }
+        m.goto(m.activeIndex);
         //开始滑动
         var swiper = m.swiper;
         swiper.addEventListener(events.start, function(e) {
             e.preventDefault();
+            m.startPosition.left = m.swiper.style.left;
+            m.startPosition.top = m.swiper.style.top;
             if (browser.isMobile()) {
                 startPoint.x = e.changedTouches[0].pageX;
                 startPoint.y = e.changedTouches[0].pageY;
@@ -83,7 +89,7 @@ var Swiper = function() {
 
                 swiper.addEventListener(events.move, moveHandle_PC, false);
             }
-            document.querySelector('.info').innerHTML = "start-->(" + startPoint.x + "," + startPoint.y + ")";
+            // document.querySelector('.info').innerHTML = "start-->(" + startPoint.x + "," + startPoint.y + ")";
         }, false);
         //移动滑动
         if (browser.isMobile()) {
@@ -99,7 +105,7 @@ var Swiper = function() {
                 endPoint.y = e.pageY;
                 swiper.removeEventListener(events.move, moveHandle_PC, false);
             }
-            document.querySelector('.info').innerHTML = "end-->(" + endPoint.x + "," + endPoint.y + ")";
+            // document.querySelector('.info').innerHTML = "end-->(" + endPoint.x + "," + endPoint.y + ")";
             utils.execCallBack(_callback);
         }, false);
     };
@@ -109,8 +115,9 @@ var Swiper = function() {
         m.flowmouse = options.flowmouse;
         m.loop = options.loop;
         m.autoPlay = options.autoPlay;
-        if(m.autoPlay){
-            setInterval(function(){
+        m.navigation = document.querySelector(options.navigation);
+        if (m.autoPlay) {
+            setInterval(function() {
                 m.next();
             }, m.autoPlay)
         }
@@ -131,35 +138,45 @@ var Swiper = function() {
             } else if (y < -threshold && m.direction === "vertical") {
                 //swipeUp
                 m.next();
+            } else {
+                if (m.direction == "horizontal") {
+                    m.swiper.style.left = m.startPosition.left;
+                }
+                if (m.direction == "vertical") {
+                    m.swiper.style.top = m.startPosition.top;
+                }
             }
         });
     };
     m.next = function() {
-        activeIndex += 1;
-        if (activeIndex >= m.length) {
+        m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
+        m.activeNav.style.boxShadow = "";
+        m.activeIndex += 1;
+        if (m.activeIndex >= m.length) {
 
             if (!m.loop) {
-                activeIndex -= 1;
+                m.activeIndex -= 1;
             } else {
-                activeIndex = 0;
+                m.activeIndex = 0;
             }
         }
-
-        m.goTo(activeIndex);
+        m.goto(m.activeIndex);
     }
     m.prev = function() {
-        activeIndex -= 1;
-        if (activeIndex < 0) {
+        m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
+        m.activeNav.style.boxShadow = "";
+        m.activeIndex -= 1;
+        if (m.activeIndex < 0) {
             if (!m.loop) {
-                activeIndex += 1;
+                m.activeIndex += 1;
             } else {
-                activeIndex = m.length - 1;
+                m.activeIndex = m.length - 1;
             }
-
         }
-        m.goTo(activeIndex);
+        m.goto(m.activeIndex);
     }
-    m.goTo = function(index) {
+    m.goto = function(index) {
+        m.activeIndex = index * 1;
         if (m.direction == "horizontal") {
             m.swiper.style.left = index * -1 * m.width + 'px';
 
@@ -168,6 +185,25 @@ var Swiper = function() {
         } else {
             return;
         }
+
+        m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
+        m.activeNav.style.boxShadow = "0 0 2px 4px";
+    }
+    m.createNav = function() {
+        var opt = {};
+        var navs = "";
+        for (var i = 0; i < m.length; i++) {
+            navs += "<div id='nav" + (i + 1) + "' class='nav' style='width:16px;height:16px'>" + (i + 1) + "</div>";
+        }
+        m.navigation.innerHTML = navs;
+        var navElements = document.querySelectorAll('.nav');
+        [].slice.call(navElements).map(function(navElement) {
+            navElement.addEventListener('click', function() {
+                m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
+                m.activeNav.style.boxShadow = "";
+                m.goto(this.id.slice(3) - 1);
+            }, false);
+        });
     }
 }
 

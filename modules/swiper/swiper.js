@@ -16,6 +16,9 @@ var Swiper = function() {
     var utils = require('common/utils');
     m.activeIndex = 0;
     m.startPosition = {};
+
+
+    
     var moveHandle_PC = function(e) {
         currentPoint.x = e.pageX;
         currentPoint.y = e.pageY;

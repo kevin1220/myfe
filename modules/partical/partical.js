@@ -151,7 +151,9 @@ var Dot = function(x1, y1, x2, y2, vx, vy) {
 Dot.prototype.paint = function() {
     var canvas = three.canvas;
     var context = canvas.getContext('2d');
+
     context.save();
+
     context.beginPath();
     // context.arc(this.x2, this.y2, this.radis, 0, Math.PI * 1);
     context.fillRect(this.x2, this.y2, 1, 1);

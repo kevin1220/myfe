@@ -6,10 +6,10 @@
 var Swiper = function() {
     'use strict';
     var m = this;
+    m.move = false;
     var startPoint = {};
     var currentPoint = {};
     var endPoint = {};
-    var start, move, end;
     var events = {};
     var options = {};
     var browser = require('common/browser');
@@ -18,31 +18,7 @@ var Swiper = function() {
     m.startPosition = {};
 
 
-    
-    var moveHandle_PC = function(e) {
-        currentPoint.x = e.pageX;
-        currentPoint.y = e.pageY;
-        // document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
-        if (m.direction == "horizontal" && m.flowmouse) {
-            m.swiper.style.left = (m.startPosition.left.slice(0, -2) * 1 + currentPoint.x - startPoint.x) + "px";
-        } else if (m.direction == "vertical" && m.flowmouse) {
-            m.swiper.style.top = (m.startPosition.top.slice(0, -2) * 1 + currentPoint.y - startPoint.y) + "px";
-        } else {
-            return;
-        }
-    }
-    var moveHandle_MOBILE = function(e) {
-        currentPoint.x = e.changedTouches[0].pageX;
-        currentPoint.y = e.changedTouches[0].pageY;
-        if (m.direction == "horizontal" && m.flowmouse) {
-            m.swiper.style.left = (m.startPosition.left.slice(0, -2) * 1 + currentPoint.x - startPoint.x) + "px";
-        } else if (m.direction == "vertical" && m.flowmouse) {
-            m.swiper.style.top = (m.startPosition.top.slice(0, -2) * 1 + currentPoint.y - startPoint.y) + "px";
-        } else {
-            return;
-        }
-        // document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
-    }
+
     if (browser.isMobile()) {
         events.start = "touchstart";
         events.move = "touchmove";
@@ -80,6 +56,7 @@ var Swiper = function() {
         var swiper = m.swiper;
         swiper.addEventListener(events.start, function(e) {
             e.preventDefault();
+            m.move = true;
             m.startPosition.left = m.swiper.style.left;
             m.startPosition.top = m.swiper.style.top;
             if (browser.isMobile()) {
@@ -90,13 +67,39 @@ var Swiper = function() {
                 startPoint.x = e.pageX;
                 startPoint.y = e.pageY;
 
-                swiper.addEventListener(events.move, moveHandle_PC, false);
             }
-            // document.querySelector('.info').innerHTML = "start-->(" + startPoint.x + "," + startPoint.y + ")";
         }, false);
         //移动滑动
+        swiper.addEventListener(events.move, function(e) {
+            if (m.move) {
+                currentPoint.x = e.pageX;
+                currentPoint.y = e.pageY;
+                // document.querySelector('.info').innerHTML = "current-->(" + currentPoint.x + "," + currentPoint.y + ")";
+                if (m.direction == "horizontal" && m.flowmouse) {
+                    m.swiper.style.left = (m.startPosition.left.slice(0, -2) * 1 + currentPoint.x - startPoint.x) + "px";
+                } else if (m.direction == "vertical" && m.flowmouse) {
+                    m.swiper.style.top = (m.startPosition.top.slice(0, -2) * 1 + currentPoint.y - startPoint.y) + "px";
+                } else {
+                    return;
+                }
+            }
+
+        }, false);
         if (browser.isMobile()) {
-            swiper.addEventListener(events.move, moveHandle_MOBILE, false);
+            swiper.addEventListener(events.move, function(e) {
+                if (m.move) {
+                    currentPoint.x = e.changedTouches[0].pageX;
+                    currentPoint.y = e.changedTouches[0].pageY;
+                    if (m.direction == "horizontal" && m.flowmouse) {
+                        m.swiper.style.left = (m.startPosition.left.slice(0, -2) * 1 + currentPoint.x - startPoint.x) + "px";
+                    } else if (m.direction == "vertical" && m.flowmouse) {
+                        m.swiper.style.top = (m.startPosition.top.slice(0, -2) * 1 + currentPoint.y - startPoint.y) + "px";
+                    } else {
+                        return;
+                    }
+                }
+
+            }, false);
         }
         //滑动结束
         swiper.addEventListener(events.end, function(e) {
@@ -106,11 +109,14 @@ var Swiper = function() {
             } else {
                 endPoint.x = e.pageX;
                 endPoint.y = e.pageY;
-                swiper.removeEventListener(events.move, moveHandle_PC, false);
+                m.move = false;
             }
-            // document.querySelector('.info').innerHTML = "end-->(" + endPoint.x + "," + endPoint.y + ")";
             utils.execCallBack(_callback);
         }, false);
+        swiper.addEventListener('mouseout', function(e) {
+            console.log(111)
+            m.move = false;
+        }, false)
     };
     m.swipe = function(options) {
         m.selector = options.selector;
@@ -153,7 +159,7 @@ var Swiper = function() {
     };
     m.next = function() {
         m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
-        m.activeNav.style.boxShadow = "";
+        m.activeNav.style.background = "rgba(0,200,200,1)";
         m.activeIndex += 1;
         if (m.activeIndex >= m.length) {
 
@@ -167,7 +173,7 @@ var Swiper = function() {
     }
     m.prev = function() {
         m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
-        m.activeNav.style.boxShadow = "";
+        m.activeNav.style.background = "rgba(0,200,200,1)";
         m.activeIndex -= 1;
         if (m.activeIndex < 0) {
             if (!m.loop) {
@@ -190,20 +196,20 @@ var Swiper = function() {
         }
 
         m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
-        m.activeNav.style.boxShadow = "0 0 2px 4px";
+        m.activeNav.style.background = "rgba(0,0,200,1)";
     }
     m.createNav = function() {
         var opt = {};
         var navs = "";
         for (var i = 0; i < m.length; i++) {
-            navs += "<div id='nav" + (i + 1) + "' class='nav' style='width:16px;height:16px'>" + (i + 1) + "</div>";
+            navs += "<div id='nav" + (i + 1) + "' class='nav' style='width:4px;height:4px'></div>";
         }
         m.navigation.innerHTML = navs;
         var navElements = document.querySelectorAll('.nav');
         [].slice.call(navElements).map(function(navElement) {
             navElement.addEventListener('click', function() {
                 m.activeNav = document.querySelector('#nav' + (m.activeIndex + 1));
-                m.activeNav.style.boxShadow = "";
+                m.activeNav.style.background = "rgba(0,200,200,1)";
                 m.goto(this.id.slice(3) - 1);
             }, false);
         });

@@ -17,7 +17,7 @@
         border: 2px solid red;
     }
     </style>
-</head>
+</head> 
 
 <body>
     <canvas width="400" height="400" id="canvas1"></canvas>
@@ -26,11 +26,29 @@
     <input id="text" type="text" name="" value="" placeholder="">
     <input id="submit" type="submit" name="" value="开始">
     <script type="text/javascript">
-    var threed = require('particle');
+    var Particle = require('particle');
     var submit = document.querySelector('#submit');
+    new Particle("#canvas2").drawimg("/static/modules/particle/images/frame_text.png", function(err, particle) {
+        if (err) {
+            console.log(err);
+        } else {
+            particle.animate({
+                model: 1,
+                shape: "square",
+                space: 2,
+                radius: 2,
+                time:10,
+                pertime:.3
+            });
+        }
+
+    });
     submit.addEventListener('click', function() {
         var text = document.querySelector('#text').value.trim();
-        new threed("#canvas1").drawtext(text, 1);
+        new Particle("#canvas1").drawtext(text).animate({
+            model:1
+        });
+
     })
     </script>
 </body>

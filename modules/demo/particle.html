@@ -20,16 +20,17 @@
 </head>
 
 <body>
-    <canvas width="200" height="200" id="canvas"></canvas>
+    <canvas width="400" height="400" id="canvas1"></canvas>
+    <canvas width="400" height="400" id="canvas2"></canvas>
     <br>
     <input id="text" type="text" name="" value="" placeholder="">
     <input id="submit" type="submit" name="" value="开始">
     <script type="text/javascript">
-    var threed = require('partical');
+    var threed = require('particle');
     var submit = document.querySelector('#submit');
     submit.addEventListener('click', function() {
         var text = document.querySelector('#text').value.trim();
-        new threed("#canvas").drawtext(text,1);
+        new threed("#canvas1").drawtext(text, 1);
     })
     </script>
 </body>

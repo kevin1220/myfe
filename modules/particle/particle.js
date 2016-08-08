@@ -45,6 +45,12 @@ Three.prototype.drawtext = function(text, model) {
     }
 }
 
+Three.prototype.drawimg = function(){
+    var canvas = this.canvas;
+    var content = canvas.getContext('2d');
+    
+}
+
 /**
  * 动画
  *

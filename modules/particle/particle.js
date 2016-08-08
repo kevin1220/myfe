@@ -69,8 +69,8 @@ Particle.prototype.drawimg = function(imgsrc, cb) {
  *model:0是分散，1是聚合
  */
 Particle.prototype.animate = function(options) {
-    particle.aniopt.time = options.time||10;
-    particle.aniopt.pertime = options.pertime||0.3;
+    particle.aniopt.time = options.time || 10;
+    particle.aniopt.pertime = options.pertime || 0.3;
     particle.aniopt.radius = options.radius || 1;
     particle.aniopt.space = options.space || 1;
     particle.aniopt.model = options.model || 1; //model:0是分散，1是聚合
@@ -97,9 +97,7 @@ function initAnimate(dots) {
         }
         dot.paint();
     });
-    setTimeout(function() {
-        animate(dots);
-    }, 500)
+    animate(dots);
 
 }
 
@@ -169,9 +167,6 @@ function getDots() {
             }
         }
     }
-    console.log(particle);
-    console.log(dots[200]);
-
     return dots;
 }
 

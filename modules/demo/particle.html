@@ -11,34 +11,38 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telphone=no, email=no">
+    <link rel="stylesheet" href="/static/modules/particle/particle.css">
     <script type="text/javascript" src="../../lib/mod.js"></script>
     <style type="text/css">
     canvas {
         border: 2px solid red;
     }
     </style>
-</head> 
+</head>
 
 <body>
     <canvas width="400" height="400" id="canvas1"></canvas>
     <canvas width="400" height="400" id="canvas2"></canvas>
+    <canvas width="400" height="400" id="canvas3"></canvas>
     <br>
     <input id="text" type="text" name="" value="" placeholder="">
-    <input id="submit" type="submit" name="" value="开始">
+    <input id="submit" type="button" name="" value="开始">
+    <input id="cloud" type="button" name="" value="云">
     <script type="text/javascript">
     var Particle = require('particle');
     var submit = document.querySelector('#submit');
+    var cloud = document.querySelector('#cloud');
     new Particle("#canvas2").drawimg("/static/modules/particle/images/frame_text.png", function(err, particle) {
         if (err) {
             console.log(err);
         } else {
             particle.animate({
-                model: 1,
+                model: 0,
                 shape: "square",
                 space: 1,
                 radius: 1,
-                time:10,
-                pertime:.3
+                time: 10,
+                pertime: .3
             });
         }
 
@@ -46,10 +50,27 @@
     submit.addEventListener('click', function() {
         var text = document.querySelector('#text').value.trim();
         new Particle("#canvas1").drawtext(text).animate({
-            model:1
+            model: 0
         });
 
-    })
+    });
+    cloud.addEventListener('click', function() {
+        new Particle("#canvas3").drawimg("/static/modules/particle/images/cloud.png", function(err, particle) {
+            if (err) {
+                console.log(err);
+            } else {
+                particle.animate({
+                    model: 0,
+                    shape: "square",
+                    space: 1,
+                    radius: 1,
+                    time: 10,
+                    pertime: 1
+                });
+            }
+
+        });
+    });
     </script>
 </body>
 

@@ -31,6 +31,9 @@ module.exports = {
     getVerifyCode: function() {
         return (((1 + Math.random()) * 0x10000) | 0).toString(8).substring(2);
     },
-
-
 }
+HTMLElement.prototype.css = function(styles) {
+    for (style in styles) {
+        this.style.setProperty(style, styles[style]);
+    }
+};

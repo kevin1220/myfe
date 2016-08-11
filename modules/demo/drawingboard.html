@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>画板demo</title>
+    <script src="../../lib/mod.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="game1"></div>
+    <script type="text/javascript">
+    var board = require("drawingboard");
+    board.start({
+        id: "board1",
+        el: "#game1"
+    });
+    </script>
+</body>
+
+</html>

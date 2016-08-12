@@ -4,8 +4,9 @@ my font-end modules，自己写的一些前端工具，基于pure构建
 1. git clone https://github.com/kevin1220/myfe.git
 2. cd myfe
 3. npm install
-4. pure server start
-5. 所有的测试demo都在/modules/demo文件夹里面
+4. pure server start，启动测试服务器
+5. pure release,发布版本
+6. 所有的测试demo都在/modules/demo文件夹里面
 
 
 ***特别说明***：

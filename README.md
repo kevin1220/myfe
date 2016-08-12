@@ -1,4 +1,4 @@
-# myfe
+## myfe
 my font-end modules，自己写的一些前端工具，基于pure构建
 ##### 项目安装和使用
 1. git clone https://github.com/kevin1220/myfe.git
@@ -13,8 +13,7 @@ my font-end modules，自己写的一些前端工具，基于pure构建
 ``1. 所有调用该模块的页面都需要先引入lib/mod.js文件才能使用
 2. 本项目的所有模块都可是直接通过html的script标签引用``
 
-## canvas模块
-> 多边形的创建
+### 多边形模块
 
 ###### 使用说明：
 > ```require(draw)```调用draw模块
@@ -66,8 +65,8 @@ draw.lines({
     isClose: true
 });
 ```
-## 粒子化模块
-### api
+### 粒子化模块
+#### api
 1. drawtext(text)，绘制需要粒子化的文本内容，传入需要粒子化的文本内容
 2. drawimg(img),img,绘制需要粒子化的图片内容，需要粒子化的图片的文件路径
 3. animate(options),添加粒子化效果，传入粒子化的运动效果的模式，0是分散，1是聚合
@@ -90,5 +89,28 @@ draw.lines({
 
 代码如下：
 ```new Particle("#canvas1").drawtext(text).animate(1);```
+
+### 画板模块
+#### api
+1. start(options),启动画板，具体参数查看使用说明
+2. clear(),清空画板
+3. convertCanvasToImage(),从canvas中把所画的内容生成PNG
+###### 使用说明
+>
+```
+var board = require("drawingboard");
+board.start({
+   id: "board1",//画板的最外层的元素的ID
+   parent: "#game1",//画板的父元素的ID
+   width:300,//画板的宽度，默认为300
+   height:300,//画板的高度，默认为300
+   background:#fff,//画板的背景，默认白色
+   brush:{//这里配置画笔的属性
+    color:#000,//画笔的颜色，默认黑色
+    weight:3,//画笔的宽度，默认为3
+    mode:1,//画笔的作用，0为橡皮擦，1为画图，默认为1
+   }
+});
+```
 
 

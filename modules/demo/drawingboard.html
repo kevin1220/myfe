@@ -10,11 +10,21 @@
 
 <body>
     <div id="game1"></div>
+    <buttun id="ganerate">生成图片</buttun>
+    <buttun id="clear">清空画板</buttun>
     <script type="text/javascript">
     var board = require("drawingboard");
     board.start({
         id: "board1",
-        el: "#game1"
+        parent: "#game1",
+    });
+    var clear = document.querySelector("#clear");
+    clear.addEventListener('click',function(){
+    	board.clear();
+    });
+    var ganerate = document.querySelector("#ganerate");
+    ganerate.addEventListener('click',function(){
+    	board.convertCanvasToImage();
     });
     </script>
 </body>

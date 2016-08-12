@@ -6,68 +6,105 @@ var Brush = function() {
 
 };
 
-Board.prototype.ganerate = function(w, h, id, el) {
+Board.prototype.ganerate = function(w, h, id, parentel, background) {
     var canvas = this.canvas = document.createElement("canvas");
-    var parent = this.parent = document.querySelector(el);
+    var parent = this.parent = document.querySelector(parentel);
     canvas.width = w;
     canvas.height = h;
     canvas.id = id;
     canvas.css({
-        "border": "1px solid #000"
+        "border": "1px solid #000",
+        "background": background
     });
     parent.appendChild(canvas);
     return this;
 };
-// background:画板背景
+// background:background of drawing Board
 Board.prototype.start = function(options) {
-    // 生成画板对象
-    var board = this.ganerate(options.width || 300, options.height || 300, options.background || "#fff", options.id, options.el);
-    //配置画板的属性
+    // ganerate the instance of board
+    var board = this.ganerate(options.width || 300, options.height || 300, options.id, options.parent, options.background || "#fff");
+    //set board's properties
     var canvas = board.canvas;
 
-    // 获取画笔的属性
-    var brushpro = options.brushpro || {};
-    // 生成画笔
+    function draw(board) {
+        var ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.strokeStyle = board.brush.color;
+        if (board.status) {
+            ctx.moveTo(board.brush.startx, board.brush.starty);
+        }
+        for (var i = 0; i < board.brush.points.length; i++) {
+            ctx.lineTo(board.brush.points[i].x, board.brush.points[i].y);
+        }
+        ctx.stroke();
+    }
+    // get brush's properties
+    var brushpro = options.brush || {};
+    // ganerate the brush
     board.brush = new Brush();
-    //设置画笔属性
+    //set the brush's properties
     board.brush.setBrush(brushpro);
     canvas.addEventListener("mousedown", function(e) {
         board.status = true;
         e.preventDefault();
-        brush.startX = e.pageX;
-        brush.startY = e.pageY;
-        console.log(brush.startX + "," + brush.startY);
+        board.brush.startx = e.pageX;
+        board.brush.starty = e.pageY;
 
     });
 
     canvas.addEventListener('mousemove', function(e) {
         if (board.status) {
             e.preventDefault();
-            brush.endX = e.pageX;
-            brush.endY = e.pageY;
-            console.log(brush.endX + "," + brush.endY);
+            x = e.pageX;
+            y = e.pageY;
+            board.brush.points.push({ x: x, y: y });
+            setTimeout(function() {
+
+                draw(board);
+            }, 1000 / 60);
         }
     });
 
     canvas.addEventListener('mouseup', function(e) {
         e.preventDefault();
+        board.brush.points = [];
         board.status = false;
     });
-    draw(board);
+
 };
 // color:画笔颜色,weight:画笔的大小,mode:画笔的功能(画图或者是擦拭)
 var Brush = function() {};
 //配置画笔的属性
 Brush.prototype.setBrush = function(options) {
-    this.color = color || "#000";
-    this.weight = weight || "3";
-    this.mode = mode || "draw";
+    this.points = [];
+    this.color = options.color || "#000";
+    this.weight = options.weight || "3";
+    // 1:draw,0:clear
+    this.mode = options.mode || 1;
     //配置橡皮擦的颜色
-    if (this.mode) {
+    if (!this.mode) {
         this.color = "#fff";
     }
 };
-
+// Converts canvas to an image
+Board.prototype.convertCanvasToImage = function() {
+    var that = this;
+    var canvas = this.canvas;
+    var image = new Image();
+    image.onload = function() {
+        that.parent.removeChild(canvas);
+        that.parent.appendChild(image);
+    }
+    image.src = canvas.toDataURL("image/png");
+};
+// clear the board
+Board.prototype.clear = function() {
+    var canvas = this.canvas;
+    var ctx = canvas.getContext("2d");
+    if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+};
 
 
 

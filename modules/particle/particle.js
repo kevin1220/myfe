@@ -10,7 +10,7 @@
  */
 // 定义粒子化对象的引用
 var particle;
-var utils = require('../common/utils.js');
+var tools = require('../common/utils.js');
 var Particle = function(selector) {
     this.aniopt = {};
     this.canvas = document.querySelector(selector);
@@ -53,7 +53,7 @@ Particle.prototype.drawimg = function(imgsrc, cb) {
     img.onload = function() {
         if (context) {
             context.drawImage(img, 0, 0);
-            utils.execCB(cb, null, particle);
+            tools.execCB(cb, null, particle);
 
         } else {
             console.log('get the context failed')
@@ -73,8 +73,9 @@ Particle.prototype.animate = function(options) {
     particle.aniopt.pertime = options.pertime || 0.3;
     particle.aniopt.radius = options.radius || 1;
     particle.aniopt.space = options.space || 1;
-    particle.aniopt.model = options.model || 1; //model:0是分散，1是聚合
+    particle.aniopt.model = options.model; //model:0是分散，1是聚合
     particle.aniopt.shape = options.shape || "square";
+    particle.aniopt.disappear = options.disappear;
     initAnimate(getDots());
 };
 
@@ -131,7 +132,7 @@ function animate(dots) {
             }
             dot.x2 -= dot.vx * t1;
             dot.y2 -= dot.vy * t1;
-            if (Math.abs(dot.x1 - dot.x2) < 100 && Math.abs(dot.y1 - dot.y2) < 100) {
+            if (Math.abs(dot.x1 - dot.x2) < 100 && Math.abs(dot.y1 - dot.y2) < 100 &&particle.aniopt.disappear) {
                 dot.pause = true;
             }
         }
